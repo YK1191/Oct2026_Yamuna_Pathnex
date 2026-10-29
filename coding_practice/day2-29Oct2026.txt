@@ -1,9 +1,8 @@
 Day 02 — Services & Tags
 
-Ansible — Install & Enable Nginx
 - name: Install and start Nginx on Pathnex
   hosts: all
-  become: yes
+  become: true
 
   tasks:
     - name: Install nginx
@@ -15,7 +14,7 @@ Ansible — Install & Enable Nginx
       service:
         name: nginx
         state: started
-        enabled: yes
+        enabled: true
 
 
 Terraform — EC2 with Tags (r5.2xlarge)
