@@ -1,0 +1,98 @@
+## Day24 - Advance Terraform Modules and CI/CD pipeline Scaling
+## Ansible - Deploy Docker Container with Kubernetes Using Helm
+===================================================================
+---
+- name: Deploy Docker Containers with Helm
+  hosts: localhost
+  tasks:
+	- name: Install Helm
+	  command: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+	- name: Deploy microservices with Helm
+	  command: helm install pathnex-app ./microservices-chart
+	  
+==================================================================
+## Terraform - Multi-Module Infrastructure with outputs
+==================================================================
+
+module "pathnex_vpc" {
+	source "./vpc"
+}
+
+module "pathnex_instance" {
+	source = "./instance"
+	vpc_id = module.pathnex_vpc.vpc.id
+	
+}
+
+output "instance_id" {
+	value = module.pathnex_instance.instance.id
+}
+
+======================================================================
+## Kubernetes - Helm-based Auto-scaling Deployments
+======================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+	name: pathnex-web-app
+spec:
+	replicas: 3
+	selector:
+		metchlabels:
+			app: pathnex-web-app
+	template:
+		metadata:
+			labels:
+				app: pathnex-web-app
+		apec:
+			containers:
+				- name: nginx
+				  image: nginx
+				  ports:
+					- containerPort: 80
+					
+---
+apiVersion: autoscalling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+	name: pathnex-web-app-hpa
+spec:
+	scaleTargetRef:
+	apiVersiono: apps/v1
+	kind: Deployment
+	name: pathnex-web-app
+minReplicas: 2
+MaxReplicas: 10
+targetCPUUtilizationPercentage: 80
+
+====================================================================
+## Jenkinsfile - Scallin CI/CD Pipeline
+====================================================================
+
+pipeline {
+	agent any
+	stages {
+		stage('Scale Up') {
+			echo 'Scaling up jenkins pipeline agents for heavy workloads ...'
+			// Simulating scaling logic
+		}
+	}
+	stage('Build') {
+		steps {
+			echo 'Building Project...'
+		}
+	}
+	stage('Deploy') {
+		steps {
+			echo 'Deploying project...'
+		}
+	}
+}
+
+=========
+Docker
+=========
+## HealthCheck
+
+FROM nginx
+HealthCheck CMD curl --fail http://localhost || exit 1
